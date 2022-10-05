@@ -22,6 +22,10 @@ jobs:
         shell: cmd
         run: git clone --recursive https://github.com/protocolbuffers/protobuf.git && cd protobuf && git checkout ${{ env.tagName }}
         
+      - name: curl zlib-v1.2.12-x86_64-posix-seh-rev0-8.1.0.zip
+        shell: cmd
+        run:  cd /d ${{ github.workspace }} && curl https://github.com/dirkarnez/zlib-prebuilt/releases/download/v1.2.12/zlib-v1.2.12-x86_64-posix-seh-rev0-8.1.0.zip -L --output zlib-v1.2.12-x86_64-posix-seh-rev0-8.1.0.zip && 7z.exe x zlib-v1.2.12-x86_64-posix-seh-rev0-8.1.0.zip -o"zlib-v1.2.12-x86_64-posix-seh-rev0-8.1.0"
+        
       - name: curl x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z
         shell: cmd
         run:  cd /d ${{ github.workspace }} && curl https://github.com/2641797006/c/blob/master/GCC-zip/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z?raw=true -L --output x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z && dir && 7z.exe x x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z
@@ -45,6 +49,8 @@ jobs:
             -Dprotobuf_BUILD_SHARED_LIBS=OFF ^
             -Dprotobuf_BUILD_TESTS=OFF ^
             -Dprotobuf_WITH_ZLIB=ON ^
+            -DZLIB_ROOT="${{ github.workspace }}/zlib-v1.2.12-x86_64-posix-seh-rev0-8.1.0" ^
+            -DZLIB_USE_STATIC_LIBS=ON ^
             -DCMAKE_INSTALL_PREFIX="build/${{ env.cmakeInstallationPath }}" ^
             -B./build &&^
             cd build && cmake --build . && cmake --install . 
